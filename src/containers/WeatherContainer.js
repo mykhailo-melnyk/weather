@@ -1,19 +1,9 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
 
 import { GeolocationContext } from "../providers/GeolocationProvider";
-import WeatherImage from "../components/WeatherImage";
-import TemperatureSlider from "../components/TemperatureSlider";
+import { WeatherImage, TemperatureSlider } from "../components";
 import { getLocationByGeographicCoordinates } from "../api/weatherApi";
-
-const getBackgroundColor = temp => {
-  if (temp <= -10) {
-    return "#00ffff";
-  } else if (temp >= 30) {
-    return "#ff8c00";
-  } else {
-    return "#fff700";
-  }
-};
+import { getWeatherBackgroundColor } from "../helpers/theme";
 
 const WeatherContainer = () => {
   const geolocation = useContext(GeolocationContext);
@@ -38,8 +28,12 @@ const WeatherContainer = () => {
     }
   }, [geolocation, getData]);
 
-  if ((!geolocation.latitude && !geolocation.error) || isLoading) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return <div>Loading weather...</div>;
+  }
+  // show loading when get geolocation in progress
+  if (!geolocation.latitude && !geolocation.error) {
+    return <div>Loading geolocation...</div>;
   }
 
   if (geolocation.error) {
@@ -49,7 +43,7 @@ const WeatherContainer = () => {
   return (
     <div
       className="h-100 w-100 d-flex flex-column  justify-content-center align-items-center"
-      style={{ backgroundColor: getBackgroundColor(weatherTemperature) }}
+      style={{ backgroundColor: getWeatherBackgroundColor(weatherTemperature) }}
     >
       {weatherIcon && <WeatherImage icon={weatherIcon} />}
       <div>{weatherTemperature}℃</div>

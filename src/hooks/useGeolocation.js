@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const defaultSettings = {
   enableHighAccuracy: false,
@@ -6,22 +6,28 @@ const defaultSettings = {
   maximumAge: 0
 };
 
-const usePosition = (watch = false, settings = defaultSettings) => {
+const useGeolocation = (watch = false, settings = defaultSettings) => {
   const [position, setPosition] = useState({});
   const [error, setError] = useState(null);
 
-  const onChange = ({ coords, timestamp }) => {
-    setPosition({
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-      accuracy: coords.accuracy,
-      timestamp
-    });
-  };
+  const onChange = useCallback(
+    ({ coords, timestamp }) => {
+      setPosition({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        accuracy: coords.accuracy,
+        timestamp
+      });
+    },
+    [setPosition]
+  );
 
-  const onError = error => {
-    setError(error.message);
-  };
+  const onError = useCallback(
+    error => {
+      setError(error.message);
+    },
+    [setError]
+  );
 
   useEffect(() => {
     const geo = navigator.geolocation;
@@ -38,9 +44,9 @@ const usePosition = (watch = false, settings = defaultSettings) => {
     }
 
     return () => watcher && geo.clearWatch(watcher);
-  }, [settings, watch]);
+  }, [settings, watch, setError, onChange, onError]);
 
   return { ...position, error };
 };
 
-export default usePosition;
+export default useGeolocation;
