@@ -4,10 +4,21 @@ import { GeolocationContext } from "../providers/GeolocationProvider";
 import WeatherImage from "../components/WeatherImage";
 import { getLocationByGeographicCoordinates } from "../api/weatherApi";
 
+const getBackgroundColor = temp => {
+  if (temp <= -10) {
+    return "#00ffff";
+  } else if (temp >= 30) {
+    return "#ff8c00";
+  } else {
+    return "#fff700";
+  }
+};
+
 const WeatherContainer = () => {
   const geolocation = useContext(GeolocationContext);
   const [weatherTemperature, setWeatherTemperature] = useState(0);
   const [weatherIcon, setWeatherIcon] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const getData = useCallback(async () => {
     const result = await getLocationByGeographicCoordinates(
@@ -16,6 +27,7 @@ const WeatherContainer = () => {
     );
     setWeatherTemperature(result.data.main.temp);
     setWeatherIcon(result.data.weather[0].icon);
+    setIsLoading(false);
   }, [geolocation]);
 
   useEffect(() => {
@@ -24,7 +36,7 @@ const WeatherContainer = () => {
     }
   }, [geolocation, getData]);
 
-  if (!geolocation.error && !geolocation.latitude) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -33,7 +45,10 @@ const WeatherContainer = () => {
   }
 
   return (
-    <div>
+    <div
+      class="h-100 w-100 d-flex justify-content-center align-items-center"
+      style={{ backgroundColor: getBackgroundColor(weatherTemperature) }}
+    >
       {weatherIcon && <WeatherImage icon={weatherIcon} />}
       <div>{weatherTemperature}℃</div>
     </div>

@@ -5,7 +5,7 @@ import { GeolocationProvider } from "./providers/GeolocationProvider";
 
 function App() {
   return (
-    <div className="App">
+    <div className="h-100 w-100 d-flex justify-content-center align-items-center">
       <GeolocationProvider>
         <WeatherContainer />
       </GeolocationProvider>
