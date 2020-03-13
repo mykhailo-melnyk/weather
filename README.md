@@ -1,4 +1,12 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Deploy
+go to root of project
+do:
+`yarn build`
+`firebase deploy`
+check next link:
+https://weather-15c04.firebaseapp.com/
+
 
 ## Available Scripts
 
