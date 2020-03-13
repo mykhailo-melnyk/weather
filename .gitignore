@@ -24,3 +24,6 @@ yarn-error.log*
 
 #vc code
 .history
+
+#firebase
+.firebase
