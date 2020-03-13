@@ -17,3 +17,9 @@ html,
 #root {
   height: 100%;
 }
+
+.slider {
+  width: 400px;
+  position: absolute;
+  bottom: 50px;
+}
